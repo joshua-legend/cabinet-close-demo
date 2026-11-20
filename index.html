@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:,">
+<title>닫히는지 미리 보기 · 보기 전용 시연판</title>
+<!--
+  보기 전용 시연판 — 서버 없이 뜬다. 물리 · 판정은 tools/demo/build.py 가 미리 돌려 data/ 에 담았다.
+  판정 글은 data 의 report 를 그대로 보인다 — 이 페이지가 스스로 "닫힘" 을 만들지 않는다.
+-->
+<link rel="stylesheet" href="style.css">
+<!-- three.js 0.160.0 은 vendor/ 에 받아 두었다 (npm three@0.160.0, MIT — vendor/three-LICENSE) -->
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/"}}</script>
+</head>
+<body>
+<header class="top">
+  <div class="title">
+    <h1>닫히는지 미리 보기 <span>· 보기 전용 시연판</span></h1>
+    <label class="pick">
+      <span class="k">제품</span>
+      <select id="product" aria-label="제품 고르기">
+        <option value="sample-cabinet">sample-cabinet — 본보기 장</option>
+        <option value="sample-cabinet-deep-shelf">sample-cabinet-deep-shelf — 선반을 8 mm 내민 장</option>
+      </select>
+    </label>
+  </div>
+  <p class="notice">보기 전용 — 치수는 전부 임시(추정) 값이다. 문 끌기 · 치수 고치기는 PC 판에서 된다.</p>
+</header>
+<div class="app">
+  <aside class="panel">
+    <h2>부품 <small>크기는 mm</small></h2>
+    <table class="parts">
+      <thead><tr><th class="c-name">이름</th><th>너비</th><th>깊이</th><th>높이</th></tr></thead>
+      <tbody id="parts"></tbody>
+    </table>
+    <p class="hint">파란 이름은 문과 같이 도는 부품이다.</p>
+
+    <h2>경첩</h2>
+    <div class="box" id="hinge"></div>
+  </aside>
+
+  <main class="view">
+    <div class="stage" id="stage"></div>
+    <div class="under">
+      <p class="overlap off" id="overlap"></p>
+      <p class="touching off" id="touching"></p>
+      <p class="physics off" id="physics"></p>
+      <div class="verdict" id="verdict"><p class="wait">판정을 불러오는 중…</p></div>
+    </div>
+  </main>
+</div>
+<button type="button" id="closeTest" class="close" title="다 열어 놓고 제품의 미는 힘으로 닫는다 (미리 돌려 담은 물리)">닫아 보기</button>
+<script type="module" src="demo.js"></script>
+<script>
+  // 모듈이 못 뜨면(파일이 빠졌거나 깨졌다) 빈 화면 대신 까닭을 띄운다. demo.js 가 뜨면 window.demoStarted 를 켠다.
+  setTimeout(function () {
+    if (window.demoStarted) return;
+    var p = document.createElement('p');
+    p.className = 'loadfail';
+    p.textContent = '화면을 못 불러왔다 — 새로 고쳐 보세요';
+    document.body.prepend(p);
+  }, 4000);
+</script>
+</body>
+</html>
