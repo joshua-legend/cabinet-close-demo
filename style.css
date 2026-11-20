@@ -1,4 +1,4 @@
-/* 보기 전용 시연판 — PC 판 화면(screen/static/style.css)에서 고치는 칸을 덜어 낸 모습. 글꼴은 시스템 것 (밖에서 받지 않는다) */
+/* 시연판 — PC 판 화면(screen/static/style.css)을 덜어 낸 모습 (치수 · 각 · 여유값만 고친다). 글꼴은 시스템 것 (밖에서 받지 않는다) */
 :root {
   --ink: #36332d; --ink-soft: #5d584e; --ink-faint: #6b6558; --line: rgba(139, 132, 118, 0.45);
   --card: #fffdf7; --find: #2f5d87; --talk: #b5523b; --r: 6px; --panel: 360px;
@@ -8,7 +8,7 @@ html, body { height: 100%; }
 body { font-family: system-ui, 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; font-size: 14px;
   line-height: 1.45; color: var(--ink); background: #fff; letter-spacing: -0.01em; word-break: keep-all;
   display: flex; flex-direction: column; }
-button, select { font: inherit; color: inherit; }
+button, select, input { font: inherit; color: inherit; }
 button { cursor: pointer; }
 
 /* ── 위: 제목 · 제품 · 알림 ── */
@@ -34,11 +34,36 @@ table.parts { width: 100%; border-collapse: collapse; }
 .parts th { font-size: 12px; font-weight: 500; color: var(--ink-soft); text-align: right; padding: 2px 4px 4px; }
 .parts th.c-name { text-align: left; }
 .parts td { padding: 4px; border-top: 1px solid rgba(139, 132, 118, 0.2); text-align: right; font-variant-numeric: tabular-nums; }
-.parts td.c-name { text-align: left; }
+.parts td.c-name { text-align: left; white-space: nowrap; }
 .parts tr.moving td.c-name { font-weight: 700; color: var(--find); }
 .box { display: grid; gap: 5px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); }
 .box .line { display: flex; gap: 10px; }
+.box .line { align-items: center; }
 .box .k { width: 72px; flex: none; color: var(--ink-soft); }
+.box .line input.short { width: 76px; margin-right: 4px; }
+
+/* 고치는 칸 */
+.head-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.reset { padding: 3px 10px; margin-top: 8px; border: 1px solid var(--find); border-radius: var(--r); background: #fff;
+  color: var(--find); font-size: 13px; font-weight: 700; }
+.calc { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
+.calc.fail { color: var(--talk); font-weight: 700; }
+.form-error { margin-bottom: 6px; padding: 4px 8px; border-radius: var(--r); background: rgba(181, 82, 59, 0.08);
+  color: var(--talk); font-size: 12.5px; font-weight: 700; }
+input.num { width: 100%; min-width: 0; padding: 3px 5px; border: 1px solid #c9ced6; border-radius: 4px; background: #fff;
+  text-align: right; font-variant-numeric: tabular-nums; }
+input.num:focus { outline: 2px solid rgba(47, 93, 135, 0.35); outline-offset: 0; border-color: var(--find); }
+input.num[aria-invalid=true] { border-color: var(--talk); background: rgba(181, 82, 59, 0.06); }
+input.num:disabled { background: transparent; border-color: transparent; }
+.parts th.c-pos, .parts td.c-pos { width: 26px; padding-left: 0; padding-right: 0; text-align: center; }
+.more { width: 24px; height: 24px; padding: 0; border: none; border-radius: 4px; background: none; color: var(--ink-soft); }
+.more:hover { background: rgba(139, 132, 118, 0.15); }
+.parts tr.pos td, .parts tr.err td { border-top: none; padding-top: 0; }
+.pos-row { display: flex; gap: 6px; justify-content: flex-end; }
+.pos-field { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; font-size: 12px; color: var(--ink-soft); }
+.pos-field .k { flex: none; }
+.parts tr.err td { text-align: left; color: var(--talk); font-size: 12.5px; font-weight: 700; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ── 오른쪽: 3D · 막대 · 판정 ── */
 .view { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
@@ -59,6 +84,13 @@ table.parts { width: 100%; border-collapse: collapse; }
 .overlap, .touching { color: var(--talk); }
 .physics { color: var(--find); }
 .off { visibility: hidden; }
+.verdict-wrap { position: relative; }
+.redo { position: absolute; top: 14px; right: 12px; padding: 2px 10px; border-radius: 999px; background: var(--card);
+  border: 1px solid var(--line); color: var(--find); font-size: 12.5px; font-weight: 700; }
+.verdict { transition: opacity 0.15s; }
+.verdict.stale { opacity: 0.4; }
+.verdict .edited { display: inline-block; margin-bottom: 4px; padding: 1px 8px; border-radius: 4px;
+  background: rgba(47, 93, 135, 0.1); color: var(--find); font-size: 12.5px; font-weight: 700; }
 .verdict { margin-top: 6px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: var(--r); background: #fff; }
 .verdict .line { line-height: 1.6; }
 .verdict .head { font-weight: 800; font-size: 15px; }
@@ -74,4 +106,5 @@ table.parts { width: 100%; border-collapse: collapse; }
   .view { order: -1; }
   #stage { height: 62vh; min-height: 320px; }
   .panel { border-right: none; border-top: 1px solid var(--line); }
+  input.num { font-size: 16px; }   /* 전화가 칸을 누를 때 확대하지 않게 */
 }
