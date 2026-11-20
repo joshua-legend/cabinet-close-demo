@@ -1,6 +1,6 @@
 /* 보기 전용 시연판 — PC 판 화면(screen/static/style.css)에서 고치는 칸을 덜어 낸 모습. 글꼴은 시스템 것 (밖에서 받지 않는다) */
 :root {
-  --ink: #36332d; --ink-soft: #5d584e; --ink-faint: #8b8476; --line: rgba(139, 132, 118, 0.45);
+  --ink: #36332d; --ink-soft: #5d584e; --ink-faint: #6b6558; --line: rgba(139, 132, 118, 0.45);
   --card: #fffdf7; --find: #2f5d87; --talk: #b5523b; --r: 6px; --panel: 360px;
 }
 * { box-sizing: border-box; margin: 0; }
