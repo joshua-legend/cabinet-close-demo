@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>결과 페이지 시안 — sample-two-doors</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--ink:#171717;--body:#4d4d4d;--mute:#6f6f6f;--hair:#ebebeb;--hair2:#a1a1a1;--canvas:#fff;--soft:#fafafa;--soft2:#f5f5f5;
+ --err:#ee0000;--err-soft:#f7d4d6;--err-deep:#c50000;--link:#0070f3;
+ --sans:"Segoe UI Variable Display","Segoe UI","Malgun Gothic",system-ui,sans-serif;--mono:"Cascadia Mono",Consolas,"D2Coding",monospace;
+ --e2:0 0 0 1px #00000014,0 1px 1px #00000005,0 2px 2px #0000000a;--e4:0 0 0 1px #00000014,0 2px 2px #0000000a,0 8px 16px -4px #0000000a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--soft);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:24px;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:12px;line-height:16px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+nav{height:64px;background:var(--canvas);border-bottom:1px solid var(--hair);display:flex;align-items:center;gap:24px;padding:0 32px;position:sticky;top:0}
+nav b{font-size:15px;font-weight:600;letter-spacing:-.3px}
+nav .links{display:flex;gap:4px}
+nav .links a{font-size:14px;color:var(--body);padding:6px 12px;border-radius:999px;text-decoration:none}
+nav .links a.on{background:var(--soft2);color:var(--ink)}
+.badge{margin-left:auto;font-family:var(--mono);font-size:12px;background:var(--soft2);color:var(--body);border-radius:999px;padding:4px 10px}
+.page{max-width:1400px;margin:0 auto;padding:48px 32px 96px}
+.hero{display:grid;grid-template-columns:5fr 7fr;gap:32px;align-items:stretch}
+.verdict{display:flex;align-items:center;gap:16px;margin:12px 0 8px}
+.x{width:56px;height:56px;border-radius:999px;background:var(--err);color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;font-weight:600}
+h1{font-size:64px;line-height:64px;font-weight:600;letter-spacing:-3px}
+.lead{font-size:20px;line-height:30px;color:var(--body);max-width:30ch;margin-bottom:32px}
+.stats{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--hair)}
+.stat{padding:16px 16px 16px 0;border-bottom:1px solid var(--hair)}
+.stat:nth-child(odd){border-right:1px solid var(--hair)}.stat:nth-child(even){padding-left:16px}
+.stat b{display:block;font-size:28px;line-height:36px;font-weight:600;letter-spacing:-1px}
+.stat span{font-size:14px;line-height:20px;color:var(--body)}
+.assumed{margin-top:16px;font-size:14px;color:var(--mute)}
+.card{background:var(--canvas);border-radius:12px;box-shadow:var(--e4);position:relative;overflow:hidden}
+.stage{min-height:440px;position:relative}
+.stage .eyebrow{position:absolute;left:20px;top:16px}
+.tag{position:absolute;font-size:13px;line-height:18px;background:var(--canvas);box-shadow:var(--e2);border-radius:6px;padding:4px 10px}
+.tag.hit{background:var(--err);color:#fff;box-shadow:none}
+.gl{position:absolute;inset:0}.gl canvas{display:block;width:100%!important;height:100%!important;cursor:grab}
+.tags{position:absolute;inset:0;pointer-events:none}.tags .tag{white-space:nowrap}
+.stage .eyebrow{z-index:2}.lens{z-index:2}
+#seek{flex:1;accent-color:var(--ink);margin:0 8px}
+.zoom{position:absolute;right:16px;top:12px;display:flex;gap:8px;z-index:2}
+.tags .pin{background:var(--canvas);color:var(--err-deep);box-shadow:0 0 0 1px var(--err)}
+.tags .gaptag{background:var(--ink);color:#fff;box-shadow:none;font-family:var(--mono)}
+.tags .gaptag.hit{background:var(--err)}
+/* 계산 과정 */
+.steps{counter-reset:s}
+.step{display:grid;grid-template-columns:40px 1fr 1.2fr 160px;gap:16px;align-items:baseline;padding:16px 24px;border-bottom:1px solid var(--hair)}
+.step:last-child{border-bottom:0}
+.step::before{counter-increment:s;content:counter(s);font:12px/16px var(--mono);color:var(--mute);border:1px solid var(--hair2);border-radius:999px;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.step .what{font-size:15px;font-weight:600}
+.step .what span{display:block;font-weight:400;font-size:13px;color:var(--body)}
+.step .how{font:13px/20px var(--mono);color:var(--body)}
+.step .res{font-size:20px;font-weight:600;letter-spacing:-.5px;text-align:right}
+.step .res small{display:block;font-size:12px;font-weight:400;color:var(--mute);letter-spacing:0}
+.step.end .res{color:var(--err)}
+.proc th:first-child,.proc td:first-child{position:sticky;left:0;background:var(--canvas)}
+.proc td.m{text-align:right}
+.proc th{text-align:right}.proc th:first-child{text-align:left}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.cmp > div{padding:20px 24px;border-right:1px solid var(--hair)}
+.cmp > div:last-child{border-right:0}
+.cmp h4{font-size:15px;font-weight:600;margin-bottom:10px}
+.cmp .ab{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;line-height:20px}
+.cmp .ab b{font:500 12px/20px var(--mono);color:var(--mute)}
+.cmp .bad{color:var(--err-deep)}
+.lens{position:absolute;right:16px;bottom:16px;width:240px;padding:14px 16px;background:rgba(250,250,250,.92);border-left:2px solid var(--ink)}
+.lens b{font-size:24px;font-weight:600;letter-spacing:-.8px}
+.lens p{font-size:13px;line-height:18px;color:var(--body)}
+.seek{display:flex;align-items:center;gap:12px;padding:16px 20px;border-top:1px solid var(--hair);background:var(--canvas)}
+.pill{font:500 14px/20px var(--sans);border-radius:999px;padding:6px 14px;border:0;box-shadow:var(--e2);background:var(--canvas);color:var(--ink)}
+.pill.p{background:var(--ink);color:#fff;box-shadow:none}
+.track{flex:1;position:relative;height:4px;background:var(--hair);border-radius:2px;margin:0 8px}
+.track i{position:absolute;left:0;width:98.6%;height:4px;background:var(--ink);border-radius:2px}
+.track u{position:absolute;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--canvas);box-shadow:var(--e4);margin-left:-8px}
+.track s{position:absolute;top:10px;font:12px/16px var(--mono);color:var(--mute);text-decoration:none;transform:translateX(-50%);white-space:nowrap}
+.deg{font-size:20px;font-weight:600;letter-spacing:-.6px;min-width:84px;text-align:right}
+section.band{margin-top:96px}
+h2{font-size:32px;line-height:40px;font-weight:600;letter-spacing:-1.3px;margin:8px 0 8px}
+.sub{font-size:18px;line-height:28px;color:var(--body);max-width:62ch;margin-bottom:32px}
+.strip{padding:24px 28px 20px}
+.row{display:grid;grid-template-columns:110px 1fr 90px;align-items:center;height:30px}
+.row .n{font-size:14px;color:var(--body)}.row .v{font:13px/20px var(--mono);text-align:right}
+.line{position:relative;height:30px}
+.line::before{content:"";position:absolute;left:0;right:0;top:15px;height:1px;background:var(--hair)}
+.line i{position:absolute;top:10px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--ink)}
+.band-ok{position:absolute;top:24px;bottom:44px;left:calc(28px + 110px + (100% - 56px - 200px)*.305);width:calc((100% - 56px - 200px)*.5);background:var(--soft2);border-radius:4px}
+.axis{display:grid;grid-template-columns:110px 1fr 90px;margin-top:6px}
+.axis div{display:flex;justify-content:space-between;font:12px/16px var(--mono);color:var(--mute)}
+table{width:100%;border-collapse:collapse;margin-top:24px}
+th{font:12px/16px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);text-align:left;background:var(--soft);padding:10px 16px;border-bottom:1px solid var(--hair)}
+td{font-size:14px;line-height:20px;padding:12px 16px;border-bottom:1px solid var(--hair);vertical-align:top}
+td.m{font-family:var(--mono);font-size:13px}
+td .s{display:block;color:var(--mute);font-size:13px}
+.ok{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.ok::before{content:"✓";font-weight:600}
+.note{font-size:13px;color:var(--err-deep);display:block;margin-top:2px}
+.pins{padding:14px 16px;font-size:14px;color:var(--mute)}
+.grid{display:grid;grid-template-columns:140px repeat(8,1fr);gap:4px;padding:24px 28px}
+.grid div{font-size:13px;line-height:18px;padding:10px 8px;border-radius:6px;background:var(--soft2);color:var(--body);text-align:center}
+.grid .h{background:none;font:12px/16px var(--mono);color:var(--mute)}
+.grid .rh{text-align:left}
+.grid .t{background:var(--err-soft);color:var(--err-deep);font-weight:600}
+.grid .f{box-shadow:inset 0 0 0 2px var(--ink)}
+.foot{padding:0 28px 20px;font-size:13px;color:var(--mute)}
+.note-end{margin-top:64px;font-size:13px;color:var(--mute)}
+</style></head><body>
+
+<nav>
+  <b>sample-two-doors</b>
+  <div class="links"><a class="on" href="#top">결론</a><a href="#calc">계산 과정</a><a href="#engines">엔진</a><a href="#inertia">관성</a><a href="../">시연판으로</a></div>
+  <span class="badge">지어낸 본보기 치수 · 실제 제품 아님</span>
+</nav>
+
+<main class="page" id="top">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">결론 · 2026-11-27 · 직접 계산 + MuJoCo</p>
+      <div class="verdict"><span class="x" aria-hidden="true">✕</span><h1>안 된다.</h1></div>
+      <p class="lead">문1 을 세게 열면 멈춤을 넘어가 문2 에 닿는다.</p>
+      <div class="stats">
+        <div class="stat"><b>0.60 mm</b><span>가장 좁은 틈 · 오차 1 mm 보다 적다</span></div>
+        <div class="stat"><b>+3.5°</b><span>이만큼 더 돌면 닿는다</span></div>
+        <div class="stat"><b>초당 115°</b><span>이보다 빨리 열면 닿는다</span></div>
+        <div class="stat"><b>51배</b><span>닿은 뒤 모서리에 걸리는 힘</span></div>
+      </div>
+      <p class="assumed">되게 하려면 — 열림각을 131° 아래로 막는다 (그때 틈 2.08 mm)</p>
+    </div>
+
+    <div class="card">
+      <div class="stage">
+        <span class="eyebrow">시험한 견본 · 끌어서 돌린다</span>
+        <div id="gl" class="gl"></div>
+        <div id="tags" class="tags"></div>
+        <div class="zoom"><button class="pill" id="zoom-in">문제 지점 크게</button><button class="pill" id="zoom-out">전체 보기</button></div>
+        <div class="lens"><p class="eyebrow" style="position:static">지금 각의 틈</p><b id="gap">—</b><p id="gap-say">문1 경첩 쪽 바깥 모서리 ↔ 문2 앞면</p></div>
+      </div>
+      <div class="seek">
+        <button class="pill" data-play="close">닫아 보기</button><button class="pill" data-play="slow">천천히 열기</button><button class="pill p" data-play="hard">세게 열기</button>
+        <input id="seek" type="range" min="0" max="143.469" step="0.05" value="143.469" aria-label="열림각">
+        <span id="deg" class="deg">143.47°</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="band" id="calc">
+    <p class="eyebrow">계산 과정 1 · 직접 계산</p>
+    <h2>식으로 풀면 이렇게 나온다.</h2>
+    <p class="sub">엔진을 쓰지 않고 도형끼리의 거리와 운동 식으로 바로 푼다. 엔진의 답을 채점하는 기준이 된다.</p>
+    <div class="card steps">
+      <div class="step"><div class="what">다 연 자리의 틈<span>140° 에서 문1 모서리 ↔ 문2 앞면</span></div><div class="how">두 상자의 가장 가까운 거리</div><div class="res">0.60 mm<small>제작 오차 1 mm 보다 적다</small></div></div>
+      <div class="step"><div class="what">닿기까지 더 도는 각<span>틈이 0 이 되는 각</span></div><div class="how">닿기 바로 앞에서 1° 에 0.18 mm 씩 준다<br>걸음 사이를 놓치지 않게 촘촘히 찾음</div><div class="res">143.47°<small>+3.5°</small></div></div>
+      <div class="step"><div class="what">문의 관성<span>경첩 축 둘레</span></div><div class="how">문 7 kg (추정) · 폭 496 · 두께 22 mm<br>I = 상자 자체 + 질량 × 거리²</div><div class="res">0.610 kg·m²</div></div>
+      <div class="step"><div class="what">멈춤을 넘어가는 각<span>멈춤을 용수철로 친다</span></div><div class="how">단단함 k 500 N·m/rad (추정) · 감쇠 0.1<br>3.5° 를 넘어가려면 ω₀ ≥ 2.01 rad/s</div><div class="res">초당 115°<small>이보다 빨리 열면 닿는다</small></div></div>
+      <div class="step"><div class="what">세게 열면<span>초당 200° (추정 — 문을 확 여는 빠르기)</span></div><div class="how">200° &gt; 115° → 멈춤을 넘어가 문2 에 닿는다</div><div class="res">닿음</div></div>
+      <div class="step end"><div class="what">결론</div><div class="how">틈이 오차보다 적다 + 세게 열면 닿는다</div><div class="res">✕ 안 된다</div></div>
+    </div>
+  </section>
+
+  <section class="band" id="engines">
+    <p class="eyebrow">계산 과정 2 · 엔진</p>
+    <h2>물리 엔진으로 같은 문을 밀어 열었다.</h2>
+    <p class="sub">MuJoCo 에 같은 장 · 문을 넣고, 다 연 각보다 25° 앞(115°)에서 2 N·m 힘으로 여는 쪽으로 밀었다. 어디서 서는지 직접 계산과 견줬다.</p>
+    <div class="card strip">
+      <span class="band-ok" aria-hidden="true" style="left:calc(28px + 110px + (100% - 56px - 200px)*.245)"></span>
+      <div class="row"><span class="n">직접 계산</span><span class="line"><i style="left:49.5%"></i></span><span class="v">143.469°</span></div>
+      <div class="row"><span class="n">MuJoCo</span><span class="line"><i style="left:49.5%"></i></span><span class="v">143.47°</span></div>
+      <div class="axis"><span></span><div><span>143.37°</span><span>143.42°</span><span>143.47°</span><span>143.52°</span><span>143.57°</span></div><span></span></div>
+    </div>
+    <div class="card" style="margin-top:24px;overflow-x:auto">
+      <table class="proc">
+        <tr><th>엔진</th><th style="text-align:left">어떻게 돌렸나</th><th>서는 각</th><th>답</th></tr>
+        <tr><td>직접 계산</td><td style="text-align:left">도형 거리 식 — 0° 부터 촘촘히 돌려 틈이 0 이 되는 각</td><td class="m">143.469°</td><td>기준</td></tr>
+        <tr><td>MuJoCo 4.0.1 · 3D</td><td style="text-align:left">115° 에서 2 N·m 로 밀어 연다 · 걸음 0.2 ms · 조인 접촉 설정</td><td class="m">143.47°</td><td><span class="ok">같음</span></td></tr>
+      </table>
+      <p class="pins">Chipmunk · Box2D · Bullet · Rapier · Jolt · libuipc — 이 본보기엔 아직 안 돌렸다. Project Chrono · Drake — 설치할 수 없었다.</p>
+    </div>
+  </section>
+
+  <section class="band" id="inertia">
+    <p class="eyebrow">관성</p>
+    <h2>얼마나 빨리 열면 닿나.</h2>
+    <p class="sub">멈춤은 용수철처럼 조금 밀린다. 멈춤의 단단함과 여는 빠르기마다 직접 계산으로 닿는지 풀었다. 빨간 칸이 닿음, 테두리 칸이 결론이 본 경우다.</p>
+    <div class="card">
+      <div class="grid">
+        <div class="h rh">단단함 \ 초당</div><div class="h">14°</div><div class="h">29°</div><div class="h">43°</div><div class="h">57°</div><div class="h">86°</div><div class="h">115°</div><div class="h">172°</div><div class="h">200° 세게</div>
+        <div class="h rh">500 무름</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div class="t">닿음</div><div class="t f">닿음</div>
+        <div class="h rh">1000</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div class="t">닿음</div><div class="t">닿음</div>
+        <div class="h rh">2000</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div>
+        <div class="h rh">5000 단단함</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div>
+      </div>
+      <p class="foot">칸은 직접 계산 · 테두리 칸(단단함 500 · 초당 200°)은 MuJoCo 로도 돌려 같은 답</p>
+    </div>
+  </section>
+
+  <p class="note-end">치수는 전부 지어낸 본보기 값이다 (실제 제품이 아니다). 추정한 것 15가지가 쓰였다 — 문 무게 · 멈춤의 단단함 · 여는 빠르기 등.</p>
+</main>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js","three/addons/controls/OrbitControls.js":"../vendor/controls/OrbitControls.js"}}</script>
+<script type="module" src="./result3d.js"></script>
+</body></html>
