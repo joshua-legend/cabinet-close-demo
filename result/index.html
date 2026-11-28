@@ -103,6 +103,13 @@ td .s{display:block;color:var(--mute);font-size:13px}
 .foot{padding:0 28px 20px;font-size:13px;color:var(--mute)}
 .note-end{margin-top:64px;font-size:13px;color:var(--mute)}
 
+.drawing{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+.drawing figure{margin:0;padding:24px;background:#fff;border-right:1px solid var(--hair);display:flex;justify-content:center}
+.drawing img{max-width:100%;height:auto;display:block}
+.drawing .read{padding:24px 28px}
+.drawing ul{list-style:none;margin:8px 0 0}
+.drawing li{padding:8px 0;border-bottom:1px solid var(--hair);font-size:15px}
+.drawing .read p:not(.eyebrow){font-size:15px;line-height:24px;color:var(--body);margin-top:8px}
 /* 휴대폰 — 한 줄로 쌓는다 (3D → 막대 → 계산 과정 → 엔진 → 관성) */
 .scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media (max-width:760px){
@@ -141,13 +148,14 @@ td .s{display:block;color:var(--mute);font-size:13px}
  .grid{grid-template-columns:58px repeat(8,1fr);gap:2px;padding:12px}
  .grid div{font-size:10px;line-height:14px;padding:8px 1px;border-radius:4px}
  .grid .h{font-size:9px}
+ .drawing{grid-template-columns:1fr}.drawing figure{border-right:0;border-bottom:1px solid var(--hair);padding:12px}.drawing .read{padding:16px}
  .foot,.pins{padding-left:16px;padding-right:16px}
 }
 </style></head><body>
 
 <nav>
   <b>sample-two-doors</b>
-  <div class="links"><a class="on" href="#top">결론</a><a href="#calc">계산 과정</a><a href="#engines">엔진</a><a href="#inertia">관성</a><a href="../">시연판으로</a></div>
+  <div class="links"><a class="on" href="#top">결론</a><a href="#drawing">도면</a><a href="#calc">계산 과정</a><a href="#engines">엔진</a><a href="#inertia">관성</a><a href="../">시연판으로</a></div>
   <span class="badge">지어낸 본보기 치수 · 실제 제품 아님</span>
 </nav>
 
@@ -181,6 +189,26 @@ td .s{display:block;color:var(--mute);font-size:13px}
       </div>
     </div>
   </div>
+
+  <section class="band" id="drawing">
+    <p class="eyebrow">받은 도면</p>
+    <h2>이런 도면을 받아 이렇게 따진다.</h2>
+    <p class="sub">회사에서 받은 경첩 설치 도면 한 장이다. 이 페이지의 계산은 이 도면을 닮게 <b>지어낸 본보기 치수</b>로 했다 — 이 도면의 치수로 낸 결론이 아니다.</p>
+    <div class="card drawing">
+      <figure><img src="./drawing.png" width="509" height="689" alt="경첩 설치 도면 — 위에서 본 단면. 두꺼운 문 두 짝이 옆판을 덮고, 다 연 문의 모서리가 옆 문 앞면에 닿는 자리에 빨간 화살표가 있다" loading="lazy"></figure>
+      <div class="read">
+        <p class="eyebrow">도면에 적힌 것</p>
+        <ul>
+          <li>문 두께 <b>32 mm</b> · 옆판 <b>25 + 25 mm</b></li>
+          <li>문이 옆판을 덮는 폭 <b>23 mm</b> · 문 사이 <b>4 mm</b></li>
+          <li>경첩 컵 <b>ø35</b> · 깊이 <b>11</b> · K = 8</li>
+          <li>다 여는 각 <b>MAX 146°</b></li>
+        </ul>
+        <p class="eyebrow" style="margin-top:20px">무엇을 묻는 도면인가</p>
+        <p>빨간 화살표는 <b>다 연 문의 경첩 쪽 바깥 모서리가 옆 문 앞면에 닿는 자리</b>를 가리킨다. 146° 까지 여는 길에, 그리고 세게 열어 멈춤을 넘어갈 때 옆 문에 닿는지 — 이 페이지의 3D 와 계산 과정이 바로 그 물음에 답한다.</p>
+      </div>
+    </div>
+  </section>
 
   <section class="band" id="calc">
     <p class="eyebrow">계산 과정 1 · 직접 계산</p>
@@ -232,7 +260,7 @@ td .s{display:block;color:var(--mute);font-size:13px}
     </div>
   </section>
 
-  <p class="note-end">치수는 전부 지어낸 본보기 값이다 (실제 제품이 아니다). 추정한 것 15가지가 쓰였다 — 문 무게 · 멈춤의 단단함 · 여는 빠르기 등.</p>
+  <p class="note-end">계산에 쓴 치수는 전부 지어낸 본보기 값이다 (실제 제품이 아니다). 받은 도면은 무엇을 따지는지 보이려고 실었다. 추정한 것 15가지가 쓰였다 — 문 무게 · 멈춤의 단단함 · 여는 빠르기 등.</p>
 </main>
 <script type="importmap">{"imports":{"three":"../vendor/three.module.js","three/addons/controls/OrbitControls.js":"../vendor/controls/OrbitControls.js"}}</script>
 <script type="module" src="./result3d.js?v=3"></script>
