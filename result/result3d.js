@@ -119,7 +119,9 @@ world.add(mark);
 
 const camera = new THREE.PerspectiveCamera(35, 4 / 3, size / 500, size * 50);
 camera.up.set(0, 0, 1);
-camera.position.copy(center).add(new THREE.Vector3(-0.35, -1, 0.75).normalize().multiplyScalar(size * 1.35));
+// 세로로 긴 화면(휴대폰)이면 더 물러선다 — 장 전체가 좁은 폭에 들게
+const fitAspect = box.clientWidth / Math.max(box.clientHeight, 1);
+camera.position.copy(center).add(new THREE.Vector3(-0.35, -1, 0.75).normalize().multiplyScalar(size * 1.35 * Math.max(1, 1.3 / fitAspect)));
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(center);
 controls.zoomToCursor = true;

@@ -9,7 +9,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--soft);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:24px;font-variant-numeric:tabular-nums}
 .eyebrow{font-family:var(--mono);font-size:12px;line-height:16px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
-nav{height:64px;background:var(--canvas);border-bottom:1px solid var(--hair);display:flex;align-items:center;gap:24px;padding:0 32px;position:sticky;top:0}
+nav{height:64px;background:var(--canvas);border-bottom:1px solid var(--hair);display:flex;align-items:center;gap:24px;padding:0 32px;position:sticky;top:0;z-index:10}
 nav b{font-size:15px;font-weight:600;letter-spacing:-.3px}
 nav .links{display:flex;gap:4px}
 nav .links a{font-size:14px;color:var(--body);padding:6px 12px;border-radius:999px;text-decoration:none}
@@ -76,13 +76,14 @@ section.band{margin-top:96px}
 h2{font-size:32px;line-height:40px;font-weight:600;letter-spacing:-1.3px;margin:8px 0 8px}
 .sub{font-size:18px;line-height:28px;color:var(--body);max-width:62ch;margin-bottom:32px}
 .strip{padding:24px 28px 20px}
-.row{display:grid;grid-template-columns:110px 1fr 90px;align-items:center;height:30px}
+.strip{--nw:110px;--vw:90px}
+.row{display:grid;grid-template-columns:var(--nw) 1fr var(--vw);align-items:center;height:30px}
 .row .n{font-size:14px;color:var(--body)}.row .v{font:13px/20px var(--mono);text-align:right}
 .line{position:relative;height:30px}
 .line::before{content:"";position:absolute;left:0;right:0;top:15px;height:1px;background:var(--hair)}
 .line i{position:absolute;top:10px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--ink)}
-.band-ok{position:absolute;top:24px;bottom:44px;left:calc(28px + 110px + (100% - 56px - 200px)*.305);width:calc((100% - 56px - 200px)*.5);background:var(--soft2);border-radius:4px}
-.axis{display:grid;grid-template-columns:110px 1fr 90px;margin-top:6px}
+.band-ok{position:absolute;top:24px;bottom:44px;left:calc(28px + var(--nw) + (100% - 56px - var(--nw) - var(--vw))*var(--at,.305));width:calc((100% - 56px - var(--nw) - var(--vw))*.5);background:var(--soft2);border-radius:4px}
+.axis{display:grid;grid-template-columns:var(--nw) 1fr var(--vw);margin-top:6px}
 .axis div{display:flex;justify-content:space-between;font:12px/16px var(--mono);color:var(--mute)}
 table{width:100%;border-collapse:collapse;margin-top:24px}
 th{font:12px/16px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--mute);text-align:left;background:var(--soft);padding:10px 16px;border-bottom:1px solid var(--hair)}
@@ -101,6 +102,47 @@ td .s{display:block;color:var(--mute);font-size:13px}
 .grid .f{box-shadow:inset 0 0 0 2px var(--ink)}
 .foot{padding:0 28px 20px;font-size:13px;color:var(--mute)}
 .note-end{margin-top:64px;font-size:13px;color:var(--mute)}
+
+/* 휴대폰 — 한 줄로 쌓는다 (3D → 막대 → 계산 과정 → 엔진 → 관성) */
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:760px){
+ nav{height:auto;flex-wrap:wrap;gap:8px 12px;padding:10px 16px;position:static}
+ nav .links{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;margin:0 -4px;scrollbar-width:none}
+ nav .links::-webkit-scrollbar{display:none}
+ .badge{margin-left:auto;font-size:11px;padding:3px 8px}
+ .page{padding:24px 16px 64px}
+ .hero{grid-template-columns:1fr;gap:24px}
+ .verdict{gap:12px}.x{width:44px;height:44px;font-size:24px}
+ h1{font-size:44px;line-height:48px;letter-spacing:-2px}
+ .lead{font-size:18px;line-height:27px;margin-bottom:20px}
+ .stat b{font-size:22px;line-height:30px}.stat span{font-size:13px}
+ .stage{min-height:0}.stage .gl{position:relative;height:340px}
+ .zoom{right:10px;top:34px}.zoom .pill{font-size:13px;padding:5px 10px}
+ .lens{position:static;width:auto;margin:0;padding:10px 14px;border-left:0;border-top:1px solid var(--hair);background:var(--soft)}.lens b{font-size:18px}.lens p{font-size:12px}
+ .seek{flex-wrap:wrap;padding:12px}
+ .seek .pill{flex:1;padding:8px 6px;font-size:13px}
+ #seek{order:5;flex:1 1 70%;margin:6px 0 0}.deg{order:6;margin-top:6px;font-size:18px;min-width:0}
+ section.band{margin-top:64px}
+ h2{font-size:26px;line-height:32px;letter-spacing:-.9px}
+ .sub{font-size:16px;line-height:24px;margin-bottom:20px}
+ .step{grid-template-columns:28px 1fr;gap:4px 12px;padding:14px 16px}
+ .step .how,.step .res{grid-column:2}.step .res{text-align:left;font-size:18px}
+ .strip{--nw:72px;--vw:74px;padding:16px 14px 14px}
+ .band-ok{left:calc(14px + var(--nw) + (100% - 28px - var(--nw) - var(--vw))*var(--at,.305));width:calc((100% - 28px - var(--nw) - var(--vw))*.5)}
+ .row .n{font-size:13px}.row .v{font-size:12px}
+ .axis div{font-size:10px}
+ .axis div span:nth-child(2n){visibility:hidden}
+ .proc,.proc tbody{display:block}
+ .proc tr{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;padding:12px 16px;border-bottom:1px solid var(--hair)}
+ .proc tr:first-child{display:none}
+ .proc td{padding:0;border:0}
+ .proc td:nth-child(1){order:1;font-weight:600}.proc td:nth-child(3){order:2}.proc td:nth-child(4){order:3}
+ .proc td:nth-child(2){order:4;grid-column:1/-1;color:var(--body);font-size:13px}
+ .grid{grid-template-columns:58px repeat(8,1fr);gap:2px;padding:12px}
+ .grid div{font-size:10px;line-height:14px;padding:8px 1px;border-radius:4px}
+ .grid .h{font-size:9px}
+ .foot,.pins{padding-left:16px;padding-right:16px}
+}
 </style></head><body>
 
 <nav>
@@ -159,7 +201,7 @@ td .s{display:block;color:var(--mute);font-size:13px}
     <h2>물리 엔진으로 같은 문을 밀어 열었다.</h2>
     <p class="sub">MuJoCo 에 같은 장 · 문을 넣고, 다 연 각보다 25° 앞(115°)에서 2 N·m 힘으로 여는 쪽으로 밀었다. 어디서 서는지 직접 계산과 견줬다.</p>
     <div class="card strip">
-      <span class="band-ok" aria-hidden="true" style="left:calc(28px + 110px + (100% - 56px - 200px)*.245)"></span>
+      <span class="band-ok" aria-hidden="true" style="--at:.245"></span>
       <div class="row"><span class="n">직접 계산</span><span class="line"><i style="left:49.5%"></i></span><span class="v">143.469°</span></div>
       <div class="row"><span class="n">MuJoCo</span><span class="line"><i style="left:49.5%"></i></span><span class="v">143.47°</span></div>
       <div class="axis"><span></span><div><span>143.37°</span><span>143.42°</span><span>143.47°</span><span>143.52°</span><span>143.57°</span></div><span></span></div>
@@ -179,13 +221,13 @@ td .s{display:block;color:var(--mute);font-size:13px}
     <h2>얼마나 빨리 열면 닿나.</h2>
     <p class="sub">멈춤은 용수철처럼 조금 밀린다. 멈춤의 단단함과 여는 빠르기마다 직접 계산으로 닿는지 풀었다. 빨간 칸이 닿음, 테두리 칸이 결론이 본 경우다.</p>
     <div class="card">
-      <div class="grid">
+      <div class="scroll-x"><div class="grid">
         <div class="h rh">단단함 \ 초당</div><div class="h">14°</div><div class="h">29°</div><div class="h">43°</div><div class="h">57°</div><div class="h">86°</div><div class="h">115°</div><div class="h">172°</div><div class="h">200° 세게</div>
         <div class="h rh">500 무름</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div class="t">닿음</div><div class="t f">닿음</div>
         <div class="h rh">1000</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div class="t">닿음</div><div class="t">닿음</div>
         <div class="h rh">2000</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div>
         <div class="h rh">5000 단단함</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div><div>안 닿음</div>
-      </div>
+      </div></div>
       <p class="foot">칸은 직접 계산 · 테두리 칸(단단함 500 · 초당 200°)은 MuJoCo 로도 돌려 같은 답</p>
     </div>
   </section>
@@ -193,5 +235,5 @@ td .s{display:block;color:var(--mute);font-size:13px}
   <p class="note-end">치수는 전부 지어낸 본보기 값이다 (실제 제품이 아니다). 추정한 것 15가지가 쓰였다 — 문 무게 · 멈춤의 단단함 · 여는 빠르기 등.</p>
 </main>
 <script type="importmap">{"imports":{"three":"../vendor/three.module.js","three/addons/controls/OrbitControls.js":"../vendor/controls/OrbitControls.js"}}</script>
-<script type="module" src="./result3d.js"></script>
+<script type="module" src="./result3d.js?v=3"></script>
 </body></html>
